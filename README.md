@@ -15,5 +15,5 @@ Download link:
 https://data.austintexas.gov/api/views/jqhg-imb3/rows.csv?accessType=DOWNLOAD
 
 ## Running the notebook
-Change the path to this repository in `start_docker.sh`
+Make sure you have Docker installed and running. Then change the path to this repository in `start_docker.sh` and run the script. 
 
