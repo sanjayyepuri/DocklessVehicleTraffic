@@ -1,0 +1,9 @@
+[submodule "Streets4MPI"]
+	path = Streets4MPI
+	url = https://github.com/jfietkau/Streets4MPI.git
+[submodule "imposm-parser"]
+	path = imposm-parser
+	url = https://github.com/omniscale/imposm-parser.git
+[submodule "openTLC"]
+	path = openTLC
+	url = https://github.com/MartijnHarmenzon/openTLC.git
