@@ -1,0 +1,51 @@
+
+
+```{r}
+location_data = read.csv("~/Documents/Source/343h/traffic/Traffic_Studies__Locations__BETA_.csv", header=TRUE)
+traffic_counts = read.csv("~/Documents/Source/343h/traffic/Traffic_Studies__Vehicle_Volume_Reports__BETA_.csv", header=TRUE)
+```
+
+
+```{r}
+dim(location_data)
+dim(traffic_counts)
+
+names(location_data)
+#head(location_data)
+
+sum(location_data["SITE_CODE"] == "D1JDC")
+sum(traffic_counts["SITE_CODE"] == "D1JDC")
+
+names(traffic_counts)
+#head(traffic_counts)
+```
+
+Trying to merge location data with vehicle counts so we can create a heat map and get a better view of what data we have. 
+
+
+```{r}
+traffic_counts.location = merge(traffic_counts, location_data[,c(3,9)], by = c("SITE_CODE"))
+```
+
+
+```{r}
+dim(traffic_counts.location)
+names(traffic_counts.location)
+
+head(traffic_counts.location[,c(1,3,14)])
+```
+
+
+```{r}
+#install.packages("OpenStreetMap")
+library(OpenStreetMap)
+library(ggplot2)
+
+LAT1 =  30 ; LAT2 = 50
+LON1 = -10 ; LON2 = 10
+map <- openmap(c(LAT2,LON1), c(LAT1,LON2), zoom = NULL,
+               type = c("osm", "stamen-toner", "stamen-terrain","stamen-watercolor", "esri","esri-topo")[1],
+               mergeTiles = TRUE)
+
+plot(map)
+```
