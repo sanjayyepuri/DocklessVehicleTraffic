@@ -6,7 +6,7 @@ building_counts = {}
 # building_coords is the dict that maps {building : (lat,long)} pairs
 building_coords = {}
 
-with open('Course_Info.csv') as csv_file:
+with open('./data/Course_Info.csv') as csv_file:
 	csv_r = csv.reader(csv_file, delimiter=",")
 	for row in csv_r:
 		room = row[4].split(" ")[0]
@@ -20,7 +20,7 @@ with open('Course_Info.csv') as csv_file:
 
 def return_class_times():
 	class_time_list = []
-	with open('Course_Info.csv') as csv_file:
+	with open('./data/Course_Info.csv') as csv_file:
 		csv_r = csv.reader(csv_file, delimiter=",")
 		for row in csv_r:
 			if row[2] == "Begin Time":

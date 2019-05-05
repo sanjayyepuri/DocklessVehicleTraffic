@@ -37,7 +37,7 @@ building_coords = {
 
 def return_CT_EL():
 	CT_EL = {} # dictionary for {class_time : {building : probability_distr}}
-	with open('Course_Info.csv') as csv_file:
+	with open('./data/Course_Info.csv') as csv_file:
 		csv_r = csv.reader(csv_file, delimiter=",")
 		for row in csv_r:
 			if row[2] == "Begin Time":
