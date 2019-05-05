@@ -35,31 +35,33 @@ building_coords = {
 'BEN': (30.283986, -97.739040), 
 'MRH': (30.287110, -97.730553)}
 
-CT_EL = {} # dictionary for {class_time : {building : probability_distr}}
-
-with open('Course_Info.csv') as csv_file:
-	csv_r = csv.reader(csv_file, delimiter=",")
-	for row in csv_r:
-		if row[2] == "Begin Time":
-			continue
-		if row[2] in CT_EL.keys():
-			room = row[4].split(" ")[0]
-			if room in CT_EL[row[2]].keys():
-				CT_EL[row[2]][room] += 1
+def return_CT_EL():
+	CT_EL = {} # dictionary for {class_time : {building : probability_distr}}
+	with open('Course_Info.csv') as csv_file:
+		csv_r = csv.reader(csv_file, delimiter=",")
+		for row in csv_r:
+			if row[2] == "Begin Time":
+				continue
+			if row[2] in CT_EL.keys():
+				room = row[4].split(" ")[0]
+				if room in CT_EL[row[2]].keys():
+					CT_EL[row[2]][room] += 1
+				else:
+					CT_EL[row[2]][room] = 1
 			else:
-				CT_EL[row[2]][room] = 1
-		else:
-			val = {}
-			room = row[4].split(" ")[0]
-			val[room] = 1
-			CT_EL[row[2]] = val
+				val = {}
+				room = row[4].split(" ")[0]
+				val[room] = 1
+				CT_EL[row[2]] = val
 
-for _,distr in CT_EL.iteritems():
-	total_classes = 0.0
-	for _,value in distr.iteritems():
-		total_classes += value
-	for key,value in distr.iteritems():
-		distr[key] /= total_classes
+	for _,distr in CT_EL.items():
+		total_classes = 0.0
+		for _,value in distr.items():
+			total_classes += value
+		for key,value in distr.items():
+			distr[key] /= total_classes
 
-print(CT_EL)
+	return CT_EL
+
+print(return_CT_EL())
 # print(len(CT_EL.keys()))

@@ -16,7 +16,21 @@ with open('Course_Info.csv') as csv_file:
 			building_counts[room] += 1
 		else:
 			building_counts[room] = 1
-print(building_counts)
+# print(building_counts)
+
+def return_class_times():
+	class_time_list = []
+	with open('Course_Info.csv') as csv_file:
+		csv_r = csv.reader(csv_file, delimiter=",")
+		for row in csv_r:
+			if row[2] == "Begin Time":
+				continue
+			if row[2] not in class_time_list:
+				class_time_list.append(row[2])
+	return class_time_list
+
+# print(return_class_times())
+
 
 building_coords = {
 'EER': (30.288374, -97.735322), 
