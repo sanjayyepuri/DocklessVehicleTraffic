@@ -1,4 +1,4 @@
-import csv
+import pandas
 
 building_coords = {
 'EER': (30.288374, -97.735322), 
@@ -35,25 +35,27 @@ building_coords = {
 'BEN': (30.283986, -97.739040), 
 'MRH': (30.287110, -97.730553)}
 
-def return_CT_EL():
+def get_building(s):
+	return s.split(" ")[0]
+	
+def return_CT_EL(class_time):
 	CT_EL = {} # dictionary for {class_time : {building : probability_distr}}
-	with open('./data/Course_Info.csv') as csv_file:
-		csv_r = csv.reader(csv_file, delimiter=",")
-		for row in csv_r:
-			if row[2] == "Begin Time":
-				continue
-			if row[2] in CT_EL.keys():
-				room = row[4].split(" ")[0]
-				if room in CT_EL[row[2]].keys():
-					CT_EL[row[2]][room] += 1
-				else:
-					CT_EL[row[2]][room] = 1
-			else:
-				val = {}
-				room = row[4].split(" ")[0]
-				val[room] = 1
-				CT_EL[row[2]] = val
+	data = pandas.read_csv('./data/Course_Info.csv')
+	# print(csv_r)
+	
+	data['building'] = data['Room'].apply(get_building)
+	data = data.groupby(['Begin Time'])
 
+
+	for time, df in data:
+		df = df.groupby('building')['building'].agg('count').to_frame('count').reset_index()
+		for i in range(len(df)):
+			room = df.iloc()[i]['building']
+			count = df.iloc()[i]['count']
+			if time not in CT_EL.keys():
+				CT_EL[time] = {}
+			CT_EL[time][room] = count
+			
 	for _,distr in CT_EL.items():
 		total_classes = 0.0
 		for _,value in distr.items():
@@ -61,7 +63,8 @@ def return_CT_EL():
 		for key,value in distr.items():
 			distr[key] /= total_classes
 
-	return CT_EL
 
-print(return_CT_EL())
+	return CT_EL[class_time]
+
+print(return_CT_EL("9:00 AM"))
 # print(len(CT_EL.keys()))
