@@ -14,8 +14,6 @@ def sample_point(polygon, N):
 
         if polygon.contains(x, y):
             points.append((x,y)) 
-
-
     return points
 
 
