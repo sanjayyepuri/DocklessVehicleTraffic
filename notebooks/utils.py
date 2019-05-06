@@ -1,6 +1,7 @@
 import shapely
 import random
 
+from shapely.geometry import Point
 from pyproj import Proj, transform
 
 
@@ -22,7 +23,12 @@ def convert_to_lat_long(x, y):
     new = Proj(init='EPSG:4326')
     original = Proj(init='EPSG:2277', preserve_units=True)
     n_x, n_y = transform(original, new, x, y)
-
-    return (n_x, n_y)
-
+    return Point(n_x, n_y)
+                 
+def convert_from_lat_long(x, y):
+    new = Proj(init='EPSG:2277', preserve_units=True)
+    original = Proj(init='EPSG:4326')
+    n_x, n_y = transform(original, new, x, y)
+    
+    return Point(n_x, n_y)
     
