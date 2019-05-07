@@ -7,7 +7,7 @@ import time, datetime
 import numpy as np 
 import math 
 
-class DocklessBayes:
+class DocklessBayesNet:
 
     def __init__(self):
         self.data = None        
@@ -150,7 +150,6 @@ class DocklessBayes:
 
     def direct_sampling(self, samples, class_time):
         start = time.time()
-        class_time = 9
         start_time_distribution = self.get_start_time_distribution(class_time)
         end_location_distribution = self.get_end_location_distribution(class_time)
 
@@ -215,8 +214,9 @@ class DocklessBayes:
         if new_variable == 1: # start_time
             dist = {}
             # P[ST | ct] * P[d | ST]
+            ct = seed[0]
             d = seed[3]
-            start_time_distribution = self.get_start_time_distribution(class_time)
+            start_time_distribution = self.get_start_time_distribution(ct)
             for st in start_time_distribution.keys():
                 if self.d_dist is not None:
                     dist[st] = self.d_dist[st][d] * start_time_distribution[st]
@@ -254,6 +254,8 @@ class DocklessBayes:
             for d in keys:
                 if self.d_dist is not None and self.sr_dist is not None:
                     dist[d] = self.d_dist[st][d] * self.sr_dist[el][d][sr]
+                elif self.d_dist is not None: 
+                    dist[d] = self.d_dist[st][d] * self.get_start_region_distribution(el, d)[sr]
                 else:
                     dist[d] = distance_distribution[d] * self.get_start_region_distribution(el, d)[sr]
                 
@@ -275,10 +277,10 @@ class DocklessBayes:
         # return sampled value
         return np.random.choice(list(dist.keys()), p=list(dist.values()))
 
-bayes = DocklessBayes()
-bayes.load_data()
-class_time = 9
-print(bayes.direct_sampling(10, class_time))
-bayes.compute_distance_distribution(class_time)
-bayes.compute_start_region_distribution()
-print(bayes.gibbs_sample(10, class_time))
+# bayes = DocklessBayes()
+# bayes.load_data()
+# class_time = 9
+# print(bayes.direct_sampling(10, class_time))
+# bayes.compute_distance_distribution(class_time)
+# bayes.compute_start_region_distribution()
+# print(bayes.gibbs_sample(10, class_time))
