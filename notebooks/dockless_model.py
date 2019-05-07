@@ -181,8 +181,11 @@ class DocklessBayesNet:
         self.sr_dist = {}
         for el in self.buildings:
             self.sr_dist[el] = {}
+            print('Started Building ' + el)
             for d in range(55, 1996, 10):
+               # print(d)
                 self.sr_dist[el][d] = self.get_start_region_distribution(el, d)
+            print('Completed Building ' + el)
 
     def compute_distance_distribution(self, class_time):
         self.d_dist = {}

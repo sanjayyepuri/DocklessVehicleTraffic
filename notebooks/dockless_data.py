@@ -83,6 +83,7 @@ class DocklessData:
 
     def clean_scooter_data(self):    
         # Cleaning Scooter Data 
+        print('Cleaning Scooter Data ...')
         scooter_data = self.scooter_data_raw.dropna(subset=['Census Tract Start'])
   
         scooter_data = scooter_data[scooter_data['Census Tract Start'] != 'OUT_OF_BOUNDS']
@@ -120,14 +121,20 @@ class DocklessData:
         scooter_data['end_hour_decimal'] = end_decimal
         
         self.scooter_data = scooter_data
+        print('Finished Cleaning Scooter Data.')
+
 
     def clean_class_data(self):
+        print('Cleaning Class Data ...')
         get_building = lambda s: s.split(" ")[0]
         self.class_data_raw['building'] = self.class_data_raw['Room'].apply(get_building)
         self.buildings = self.class_data_raw['building'].unique().tolist()
         self.class_data = self.class_data_raw.groupby(['Begin Time'])
+        print('Finished Cleaning Class Data.')
+
 
     def transform_endpoints(self):
+        print('Transforming Endpoints ...')
         correct_endpoints_forward = self.scooter_data[self.scooter_data['tract_start'].isin(offcampus)]
         correct_endpoints_forward = correct_endpoints_forward[correct_endpoints_forward['tract_end'].isin(oncampus)]
 
@@ -136,6 +143,7 @@ class DocklessData:
         correct_endpoints_backward.rename(columns={'tract_start': 'tract_end', 'tract_end': 'tract_start'}, inplace=True)
 
         self.transformed_endpoints = pd.concat([correct_endpoints_forward, correct_endpoints_backward], sort=False)
+        print('Finished Transforming Endpoints.')
 
     @staticmethod
     def to_class_time(hour):
