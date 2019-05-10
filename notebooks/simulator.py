@@ -16,17 +16,21 @@ class Simulator:
         self.census_data = gpd.GeoDataFrame.from_file(census_data_path)
 
     def get_graph(self):
-        self.map = ox.graph_from_address(central_address, distance=1750, network_type='bike')
+        self.map = ox.graph_from_address(central_address, distance=3000, network_type='bike')
 
         # Intialize all frequencies to 0 
         for e in self.map.edges:
             self.map.edges[e]['count'] = 0
+        
+        for n in self.map.nodes:
+            self.map.nodes[n]['count'] = 0
 
     def simulate(self, rides):\
         #
         for ride in rides:
             _, _, building_name, _, region_id = ride
             self.update_graph(region_id, building_name)
+            print('Finished', building_name, region_id)
         
 
     def update_intersections(self, start_node, end_node):
@@ -37,13 +41,20 @@ class Simulator:
         """
 
         # paths is a list that will contains a list of shortest paths (list of nodes)
-        path = nx.shortest_path(self.map, start_node, end_node)
+        try:
+            path = nx.shortest_path(self.map, start_node, end_node)
+            for node in range(len(path)-1):
+                start = path[node]
+                end = path[node+1]
+                self.map.nodes[start]['count'] += 1
+                self.map.nodes[end]['count'] += 1
+                self.map.edges[start, end, 0]['count'] += 1
+        except:
+            print("Cannot find path between, ", start_node, end_node)
+        
 
         # increment edge count for an edge denoted by path
-        for node in range(len(path)-1):
-            start = path[node]
-            end = path[node+1]
-            self.map.edges[start, end, 0]['count'] += 1
+        
 
 
     # given a start and end location, update edge path
